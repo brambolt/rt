@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.FileSystem;
+import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -54,6 +55,13 @@ public class ZipFileSystems {
   public static FileSystem unzip(URI uri) throws IOException {
     Map<String, Object> properties = new HashMap<>();
     properties.put("create", false);
+    try {
+      FileSystem existing = FileSystems.getFileSystem(uri);
+      if (null != existing)
+        existing.close();
+    } catch (FileSystemNotFoundException ignored) {
+      // Fall through
+    }
     return FileSystems.newFileSystem(uri, properties);
   }
 
