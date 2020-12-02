@@ -196,13 +196,15 @@ public class Maps {
     }
 
     private static void insertValue(String name, Map<String, Object> map, String key, String value) {
-        if (null != value && !value.trim().isEmpty())
-            if (map.containsKey(key))
-                // There is a conflict (and overwriting is not allowed):
-                throw new IllegalStateException("Second value found for property " + name + ": [" + map.get(key) + "] [" + value + "]");
-            else
-                // There is a value, and no conflict - insert it:
-                map.put(key, value);
+        if (null == value)
+            return; // Nothing to do
+        // Don't trim the value or check for the empty string
+        if (map.containsKey(key))
+            // There is a conflict (and overwriting is not allowed):
+            throw new IllegalStateException("Second value found for property " + name + ": [" + map.get(key) + "] [" + value + "]");
+        else
+            // There is a value, and no conflict - insert it:
+            map.put(key, value);
         // If there is no value then we do nothing
     }
 }
